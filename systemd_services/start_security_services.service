@@ -1,0 +1,12 @@
+[Unit]
+Description=Démarre les services de sécurité en séquence
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/path/to/start_security_services.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+

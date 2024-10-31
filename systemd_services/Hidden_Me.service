@@ -1,0 +1,13 @@
+[Unit]
+Description=Hidden Me Service
+After=network.target
+
+[Service]
+ExecStart=/opt/hidden_you/hidden_you.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+
+

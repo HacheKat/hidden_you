@@ -1,0 +1,12 @@
+[Unit]
+Description=dnscrypt-proxy client
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/dnscrypt-proxy -config /etc/dnscrypt-proxy/dnscrypt-proxy.toml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

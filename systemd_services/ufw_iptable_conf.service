@@ -1,0 +1,12 @@
+[Unit]
+Description=Configuration avancée du pare-feu avec UFW et IPTables
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/hidden_you/ufw_iptable_conf.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+

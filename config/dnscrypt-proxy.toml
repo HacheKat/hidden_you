@@ -1,0 +1,70 @@
+##############################################
+#       dnscrypt-proxy configuration         #
+##############################################
+
+## Sélection des serveurs DNS sécurisés et sans logs, avec support DNSCrypt ou DoH.
+server_names = ['doh.opendns.com', 'cloudflare', 'scaleway-fr']  # Liste des serveurs DNS, ajustez selon vos préférences.
+
+## Adresse d'écoute pour intercepter les requêtes DNS.
+listen_addresses = ['127.0.2.1:53']  # Adresse d'écoute différente pour éviter toute collision avec d'autres services DNS.
+
+## Configuration de connexion et protocole
+max_clients = 250
+ipv4_servers = true
+ipv6_servers = false
+dnscrypt_servers = true
+doh_servers = true
+odoh_servers = false  # Désactivé pour limiter les protocoles et réduire la surface d'attaque.
+
+## Critères pour les serveurs (non-logs, DNSSEC, pas de filtrage, etc.)
+require_nolog = true
+require_nofilter = true
+dnscrypt_ephemeral_keys = true
+require_dnssec = true
+
+## Timeout des requêtes DNS en millisecondes
+timeout = 5000
+keepalive = 30
+
+## Serveurs bootstrap pour initialiser la connexion sécurisée si nécessaire
+bootstrap_resolvers = ['9.9.9.11:53', '8.8.8.8:53']  # Utilisez des serveurs fiables pour les requêtes initiales.
+
+## Ignorer les DNS système pour éviter toute fuite
+ignore_system_dns = true
+
+## Désactiver l'IPv6 pour bloquer les requêtes AAAA et éviter les fuites
+block_ipv6 = true
+
+## Cache DNS pour réduire la latence (optimisation de taille et de durée)
+cache = true
+cache_size = 4096
+cache_min_ttl = 600  # Temps minimum (10 minutes)
+cache_max_ttl = 86400  # Temps maximum (1 jour)
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+
+## Filtrage des domaines bloqués et activation du blocage publicitaire
+[blocked_names]
+sources = ['https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts']
+
+## Log des requêtes (à désactiver si confidentialité absolue requise)
+[query_log]
+format = 'tsv'
+file = '/var/log/dnscrypt-proxy/query.log'
+# La ligne ci-dessus enregistre les requêtes DNS dans un fichier, désactivez-le en commentaire si la confidentialité maximale est requise.
+
+## Sources des serveurs DNS publics
+[sources]
+
+  [sources.public-resolvers]
+    urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md']
+    cache_file = 'public-resolvers.md'
+    minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+    refresh_delay = 72
+
+  [sources.relays]
+    urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/relays.md', 'https://download.dnscrypt.info/resolvers-list/v3/relays.md']
+    cache_file = 'relays.md'
+    minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+    refresh_delay = 72
+
